@@ -33,7 +33,7 @@ AbstractCommunicationHandler::Type AbstractCommunicationHandler::getCommHandlerT
 
 AbstractCommunicationHandler *AbstractCommunicationHandler::MakeCommunicationHandler(const DeviceCommParams &commparam)
 {
-    AbstractCommunicationHandler *ptrCommHandler = nullptr;
+    AbstractCommunicationHandler *ptrCommHandler;
     switch (commparam.commHandlertype) {
     case AbstractCommunicationHandler::Serial_QT:
         ptrCommHandler = new SerialQT(
@@ -44,10 +44,13 @@ AbstractCommunicationHandler *AbstractCommunicationHandler::MakeCommunicationHan
                     commparam.stopBits!=-1?commparam.stopBits:1,
                     commparam.flowControl!=-1?commparam.flowControl:0);
         break;
-    case AbstractCommunicationHandler::Serial_Win32:
-        // Not implemented
-        ptrCommHandler = nullptr;
-        break;
+    // case AbstractCommunicationHandler::Serial_Win32:
+    //     ptrCommHandler = new SerialWin32(
+    //                 commparam.port,
+    //                 commparam.baudrate!=-1?commparam.baudrate:9600,
+    //                 commparam.dataBits!=-1?commparam.dataBits:8,
+    //                 commparam.parity!=-1?commparam.parity:0);
+    //     break;
     case AbstractCommunicationHandler::TCP_Server:
         ptrCommHandler = new TcpServer_SingleClient(commparam.port.toInt());
         break;

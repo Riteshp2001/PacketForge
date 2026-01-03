@@ -31,18 +31,10 @@ SerialQT::SerialQT(QString portName, int baudRate, int dataBits, int parity, int
 }
 
 SerialQT::~SerialQT(){
-    close(); // Stop logic operations
-    
-    if (worker) {
-        // Schedule deletion in the worker thread to ensure timers/objects are killed in their own thread
-        QMetaObject::invokeMethod(worker, "deleteLater", Qt::QueuedConnection);
-    }
-
-    if (workerThread) {
-        workerThread->quit();
-        workerThread->wait();
-        delete workerThread;
-    }
+    close();
+    workerThread->quit();
+    workerThread->wait();
+    delete worker;
 }
 
 bool SerialQT::initialize(QString portName, int baudRate, int dataBits, int parity, int stopBits, int flowControl)

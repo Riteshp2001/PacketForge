@@ -108,8 +108,8 @@ public slots:
     virtual void send(QByteArray data) = 0;
 
     // Hardware Pin Control (Virtual - Default No-Op)
-    virtual void setDtr(bool /*set*/) {}
-    virtual void setRts(bool /*set*/) {}
+    virtual void setDtr(bool set) {}
+    virtual void setRts(bool set) {}
     
     /**
      * @brief Gets the status of input pins (CTS, DSR, DCD, RI).
