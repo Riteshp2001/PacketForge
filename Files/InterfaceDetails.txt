@@ -1,0 +1,3 @@
+Interfaces:
+    .csv>SERIAL_QT>COM21>9600>0>8>1>0;
+

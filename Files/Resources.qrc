@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Stylesheet/StyleSheet.qss</file>
+        <file>Images/TataLogo.png</file>
+        <file>Images/app_icon.png</file>
+        <file>Images/arrow_down.svg</file>
+        <file>Images/arrow_up.svg</file>
+    </qresource>
+    <qresource prefix="/\"/>
+</RCC>
