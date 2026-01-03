@@ -1,0 +1,76 @@
+# ==============================================================================
+# PacketForge .gitignore
+# Qt/C++ Project
+# ==============================================================================
+
+# --- Build Artifacts ---
+build/
+bin/
+release/
+debug/
+*.o
+*.obj
+*.exe
+*.dll
+*.lib
+*.a
+*.so
+*.dylib
+
+# --- Qt Generated Files ---
+moc_*.cpp
+ui_*.h
+qrc_*.cpp
+*.moc
+Makefile
+Makefile.*
+*.pro.user
+*.pro.user.*
+*.qbs.user
+*.qbs.user.*
+*.autosave
+.qmake.stash
+
+# --- Qt Creator ---
+*.qmlproject.user
+*.qmlproject.user.*
+CMakeLists.txt.user
+CMakeLists.txt.user.*
+.qtcreator/
+
+# --- IDE / Editor ---
+.vs/
+.vscode/
+*.swp
+*.swo
+*~
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# --- OS Generated ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# --- Logs ---
+*.log
+logs/
+
+# --- Temporary Files ---
+tmp/
+temp/
+*.tmp
+*.bak
+*.backup
+
+# --- Package/Installer ---
+*.nsi
+*.msi
+Setup.exe
+installer/
