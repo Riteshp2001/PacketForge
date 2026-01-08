@@ -18,7 +18,7 @@ jobs:
             qt_arch: "win64_msvc2019_64"
             filename: "PacketForge-Windows.zip"
 
-          - os: ubuntu-24.04 
+          - os: linux-latest
             qt_ver: "6.6.0"
             qt_arch: "gcc_64"
             filename: "PacketForge-Linux.AppImage"
@@ -102,11 +102,17 @@ jobs:
           mkdir -p release_dist/usr/bin
           cp bin/PacketForge release_dist/usr/bin/
           cp -r Files release_dist/usr/bin/
+          
+          # Prepare desktop file and icon
+          cp Files/PacketForge.desktop release_dist/
+          cp Files/Images/app_icon.png release_dist/
 
           # Run linuxdeploy
           export QMAKE=$(which qmake)
           ./linuxdeploy-x86_64.AppImage --appdir release_dist \
             --plugin qt \
+            --desktop-file release_dist/PacketForge.desktop \
+            --icon-file release_dist/app_icon.png \
             --output appimage
           
           # Rename output to match matrix
@@ -140,7 +146,7 @@ jobs:
   release:
     name: Create GitHub Release
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: linux-latest
     if: startsWith(github.ref, 'refs/tags/')
     permissions:
       contents: write

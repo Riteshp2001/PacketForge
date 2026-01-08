@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=PacketForge
+Comment=Multi-protocol packet transmission utility
+Exec=PacketForge
+Icon=app_icon
+Categories=Utility;Development;
+Terminal=false
