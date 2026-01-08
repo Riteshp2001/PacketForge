@@ -1,0 +1,180 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            qt_ver: "6.6.0"
+            qt_arch: "win64_msvc2019_64"
+            filename: "PacketForge-Windows.zip"
+
+          - os: ubuntu-24.04 
+            qt_ver: "6.6.0"
+            qt_arch: "gcc_64"
+            filename: "PacketForge-Linux.AppImage"
+
+          - os: macos-latest
+            qt_ver: "6.6.0"
+            qt_arch: "clang_64"
+            filename: "PacketForge-macOS.dmg"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # ===================== INSTALL QT =====================
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: ${{ matrix.qt_ver }}
+          host: ${{ matrix.os == 'windows-latest' && 'windows' || (matrix.os == 'macos-latest' && 'mac' || 'linux') }}
+          target: desktop
+          arch: ${{ matrix.qt_arch }}
+          modules: qtserialport qtserialbus
+          install-deps: true
+
+      # ===================== LINUX DEPS =====================
+      - name: Install Linux Build Dependencies
+        if: matrix.os == 'ubuntu-24.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgl1-mesa-dev libxkbcommon-x11-0 libxcb-cursor0 desktop-file-utils libfuse2
+
+      # ===================== BUILD =====================
+      - name: Build Project (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: cmd
+        run: |
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          qmake PacketForge.pro
+          nmake release
+
+      - name: Build Project (Linux/macOS)
+        if: matrix.os != 'windows-latest'
+        run: |
+          qmake PacketForge.pro
+          make -j$(nproc 2>/dev/null || sysctl -n hw.ncpu)
+
+      # ===================== WINDOWS PACKAGE =====================
+      - name: Package (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: cmd
+        run: |
+          mkdir release_dist
+          copy bin\PacketForge.exe release_dist\
+          windeployqt release_dist\PacketForge.exe --dir release_dist --no-translations --compiler-runtime
+          xcopy /E /I Files release_dist\Files
+          powershell Compress-Archive -Path release_dist\* -DestinationPath ${{ matrix.filename }}
+
+      - name: Install Inno Setup
+        if: matrix.os == 'windows-latest'
+        run: choco install innosetup -y
+
+      - name: Build Windows Installer
+        if: matrix.os == 'windows-latest'
+        shell: cmd
+        run: |
+          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" scripts\PacketForge.iss
+          copy installer_output\PacketForge_Setup.exe PacketForge_Setup.exe
+
+      # ===================== LINUX APPIMAGE =====================
+      - name: Package (Linux)
+        if: matrix.os == 'ubuntu-24.04'
+        env:
+          APPIMAGE_EXTRACT_AND_RUN: 1
+        run: |
+          # Download linuxdeploy and Qt plugin
+          wget -q https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+          wget -q https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
+          chmod +x linuxdeploy*.AppImage
+
+          # Create AppDir structure
+          mkdir -p release_dist/usr/bin
+          cp bin/PacketForge release_dist/usr/bin/
+          cp -r Files release_dist/usr/bin/
+
+          # Run linuxdeploy
+          export QMAKE=$(which qmake)
+          ./linuxdeploy-x86_64.AppImage --appdir release_dist \
+            --plugin qt \
+            --output appimage
+          
+          # Rename output to match matrix
+          mv PacketForge-*.AppImage ${{ matrix.filename }}
+
+      # ===================== MACOS PACKAGE =====================
+      - name: Package macOS
+        if: matrix.os == 'macos-latest'
+        run: |
+          mkdir release_dist
+          cp -r bin/PacketForge.app release_dist/
+          cp -r Files release_dist/PacketForge.app/Contents/Resources/
+          macdeployqt release_dist/PacketForge.app
+          hdiutil create -volname PacketForge -srcfolder release_dist -ov -format UDZO ${{ matrix.filename }}
+
+      # ===================== UPLOAD ARTIFACTS =====================
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.filename }}
+          path: ${{ matrix.filename }}
+
+      - name: Upload Windows Installer
+        if: matrix.os == 'windows-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: PacketForge_Setup.exe
+          path: PacketForge_Setup.exe
+
+  # ===================== RELEASE =====================
+  release:
+    name: Create GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Generate SHA256 Checksums
+        id: checksums
+        run: |
+          cd artifacts
+          echo "CHECKSUMS<<EOF" >> $GITHUB_OUTPUT
+          find . -type f \( -name "*.exe" -o -name "*.zip" -o -name "*.AppImage" -o -name "*.dmg" \) -exec sha256sum {} + >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: PacketForge ${{ github.ref_name }}
+          generate_release_notes: true
+          body: |
+            # 🚀 PacketForge ${{ github.ref_name }} Released!
+            
+            ## 🔐 Checksums (SHA256)
+            ```text
+            ${{ steps.checksums.outputs.CHECKSUMS }}
+            ```
+          files: |
+            artifacts/**/*.exe
+            artifacts/**/*.zip
+            artifacts/**/*.AppImage
+            artifacts/**/*.dmg
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

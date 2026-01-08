@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Stylesheet/StyleSheet.qss</file>
+        <file>Images/app_icon.png</file>
+        <file>Images/arrow_down.svg</file>
+        <file>Images/arrow_up.svg</file>
+        <file>Images/setting.svg</file>
+        <file>Images/close.svg</file>
+        <file>Images/close_hover.svg</file>
+    </qresource>
+    <qresource prefix="/\"/>
+</RCC>

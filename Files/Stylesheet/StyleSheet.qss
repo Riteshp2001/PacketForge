@@ -1,0 +1,144 @@
+/* Global Dark Theme */
+QWidget#INSLog {
+    background-color: #1e1e2e; /* Base Dark */
+    color: #cdd6f4;
+    font-family: 'Segoe UI', 'Roboto', sans-serif;
+}
+
+/* Header */
+QFrame#headerFrame {
+    background-color: #181825; /* Darker Header */
+    border-bottom: 2px solid #89b4fa; /* Blue Accent Line */
+}
+QLabel#lblTitle {
+    color: #89b4fa; /* Primary Blue */
+}
+
+/* Close Button */
+QPushButton#closeApp {
+    background-color: transparent;
+    color: #a6adc8;
+    font-size: 20px;
+}
+QPushButton#closeApp:hover {
+    color: #f38ba8; /* Red on hover */
+}
+
+/* GroupBoxes (Cards) */
+QGroupBox {
+    background-color: #313244; /* Surface 1 */
+    border: 1px solid #45475a;
+    border-radius: 8px;
+    margin-top: 1.5em;
+    padding-top: 15px;
+    font-weight: bold;
+    color: #bac2de;
+}
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    padding: 0 5px;
+    left: 10px;
+    color: #89b4fa; /* Accent Title */
+}
+
+/* Inputs */
+QLineEdit, QSpinBox, QTextEdit, QComboBox {
+    border: 1px solid #45475a;
+    border-radius: 6px;
+    padding: 8px;
+    background-color: #45475a; /* Surface 2 */
+    color: #cdd6f4;
+    selection-background-color: #585b70;
+}
+QLineEdit:focus, QSpinBox:focus, QTextEdit:focus, QComboBox:focus {
+    border: 1px solid #89b4fa;
+    background-color: #313244;
+}
+
+/* Combo Box Dropdown */
+QComboBox::drop-down {
+    border: none;
+    background: transparent;
+}
+QComboBox QAbstractItemView {
+    background-color: #313244;
+    color: #cdd6f4;
+    selection-background-color: #89b4fa;
+    selection-color: #1e1e2e;
+}
+
+/* Bottom Navigation Bar */
+QFrame#bottomNavFrame {
+    background-color: #181825;
+    border-top: 1px solid #313244;
+}
+QPushButton#navConnect, QPushButton#navTransmit, QPushButton#navMonitor {
+    background-color: transparent;
+    color: #a6adc8; /* Inactive */
+    font-size: 14px;
+    border-radius: 8px;
+    border: none;
+}
+QPushButton#navConnect:checked, QPushButton#navTransmit:checked, QPushButton#navMonitor:checked {
+    background-color: #313244;
+    color: #89b4fa; /* Active Blue */
+    font-weight: bold;
+}
+QPushButton#navConnect:hover, QPushButton#navTransmit:hover, QPushButton#navMonitor:hover {
+    background-color: #45475a;
+}
+
+/* Action Buttons */
+QPushButton#btnConnect {
+    background-color: #89b4fa; /* Blue */
+    color: #1e1e2e;
+    font-weight: bold;
+    border-radius: 6px;
+}
+QPushButton#btnConnect:hover { background-color: #74c7ec; }
+QPushButton#btnConnect:disabled { background-color: #45475a; color: #6c7086; }
+
+QPushButton#btnDisconnect {
+    background-color: #f38ba8; /* Red */
+    color: #1e1e2e;
+    font-weight: bold;
+    border-radius: 6px;
+}
+QPushButton#btnDisconnect:hover { background-color: #eba0ac; }
+QPushButton#btnDisconnect:disabled { background-color: #45475a; color: #6c7086; }
+
+QPushButton#startLog {
+    background-color: #a6e3a1; /* Green */
+    color: #1e1e2e;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 8px;
+}
+QPushButton#startLog:hover { background-color: #94e2d5; }
+
+QPushButton#stopLog {
+    background-color: #f38ba8;
+    color: #1e1e2e;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 8px;
+}
+QPushButton#stopLog:hover { background-color: #eba0ac; }
+
+/* Table Widget */
+QTableWidget {
+    background-color: #1e1e2e;
+    color: #cdd6f4;
+    gridline-color: #45475a;
+    border: 1px solid #45475a;
+}
+QHeaderView::section {
+    background-color: #313244;
+    color: #bac2de;
+    padding: 5px;
+    border: 1px solid #45475a;
+}
+QTableWidget::item {
+    padding: 5px;
+}
