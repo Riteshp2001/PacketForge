@@ -45,14 +45,14 @@ jobs:
 
       # ===================== LINUX DEPS =====================
       - name: Install Linux Build Dependencies
-        if: matrix.os == 'ubuntu-24.04'
+        if: runner.os == 'Linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y libgl1-mesa-dev libxkbcommon-x11-0 libxcb-cursor0 desktop-file-utils libfuse2
 
       # ===================== BUILD =====================
       - name: Build Project (Windows)
-        if: matrix.os == 'windows-latest'
+        if: runner.os == 'Windows'
         shell: cmd
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
@@ -60,14 +60,14 @@ jobs:
           nmake release
 
       - name: Build Project (Linux/macOS)
-        if: matrix.os != 'windows-latest'
+        if: runner.os != 'Windows'
         run: |
           qmake PacketForge.pro
           make -j$(nproc 2>/dev/null || sysctl -n hw.ncpu)
 
       # ===================== WINDOWS PACKAGE =====================
       - name: Package (Windows)
-        if: matrix.os == 'windows-latest'
+        if: runner.os == 'Windows'
         shell: cmd
         run: |
           mkdir release_dist
@@ -77,11 +77,11 @@ jobs:
           powershell Compress-Archive -Path release_dist\* -DestinationPath ${{ matrix.filename }}
 
       - name: Install Inno Setup
-        if: matrix.os == 'windows-latest'
+        if: runner.os == 'Windows'
         run: choco install innosetup -y
 
       - name: Build Windows Installer
-        if: matrix.os == 'windows-latest'
+        if: runner.os == 'Windows'
         shell: cmd
         run: |
           "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" scripts\PacketForge.iss
@@ -89,7 +89,7 @@ jobs:
 
       # ===================== LINUX APPIMAGE =====================
       - name: Package (Linux)
-        if: matrix.os == 'ubuntu-24.04'
+        if: runner.os == 'Linux'
         env:
           APPIMAGE_EXTRACT_AND_RUN: 1
         run: |
