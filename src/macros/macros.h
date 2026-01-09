@@ -18,7 +18,7 @@
 // --- Application Constants ---
 /** Default window title and connection settings */
 #define APP_TITLE "PacketForge"
-#define APP_VERSION "1.0.0"
+#define APP_VERSION "1.0.1"
 #define DEFAULT_BAUD_RATE "115200"
 #define DEFAULT_IP "127.0.0.1"
 

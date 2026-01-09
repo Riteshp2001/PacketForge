@@ -2,7 +2,7 @@
 ; Creates a Windows installer for PacketForge
 
 #define MyAppName "PacketForge"
-#define MyAppVersion "1.0.0"
+#define MyAppVersion "1.0.1"
 #define MyAppPublisher "Ritesh Pandit"
 #define MyAppURL "https://riteshdpandit.vercel.app"
 #define MyAppExeName "PacketForge.exe"

@@ -30,6 +30,7 @@
 
 // Project Modules
 #include <ByteVisualizerWidget.h>
+#include <ChecksumWidget.h>
 #include <ConnectionTab.h>
 #include <ModbusClientWidget.h>
 #include <OscilloscopeWidget.h>
@@ -112,6 +113,7 @@ MainWindow::MainWindow(QWidget *parent)
   cmbTools->addItem("New Modbus Client");
   cmbTools->addItem("Oscilloscope");
   cmbTools->addItem("Byte Visualizer");
+  cmbTools->addItem("Checksum Calculator");
   cmbTools->setCurrentIndex(0);
   cmbTools->setMinimumWidth(110);
   cmbTools->setFixedHeight(ui->closeApp->height());
@@ -175,6 +177,20 @@ MainWindow::MainWindow(QWidget *parent)
                           &ByteVisualizerWidget::addData);
                 }
               }
+              break;
+            }
+            case 5: {
+              for (int i = 0; i < ui->mainTabWidget->count(); i++) {
+                if (qobject_cast<ChecksumWidget *>(
+                        ui->mainTabWidget->widget(i))) {
+                  ui->mainTabWidget->setCurrentIndex(i);
+                  cmbTools->setCurrentIndex(0);
+                  return;
+                }
+              }
+              ChecksumWidget *checksum = new ChecksumWidget(this);
+              ui->mainTabWidget->addTab(checksum, "Checksum Calculator");
+              ui->mainTabWidget->setCurrentWidget(checksum);
               break;
             }
             }
@@ -522,20 +538,55 @@ void MainWindow::applyLightTheme() {
         }
         QScrollBar:vertical {
             border: none;
-            background: #f3f3f3;
-            width: 14px;
-            margin: 0px;
+            background: #f0f0f0;
+            width: 12px;
+            margin: 3px 2px 3px 2px;
+            border-radius: 6px;
         }
         QScrollBar::handle:vertical {
-            background: #cdcdcd;
-            min-height: 20px;
-            border-radius: 7px;
+            background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #b8b8b8, stop:1 #c8c8c8);
+            min-height: 30px;
+            border-radius: 5px;
+            margin: 1px;
         }
         QScrollBar::handle:vertical:hover {
-            background: #a6a6a6;
+            background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #0078d7, stop:1 #1e90ff);
+        }
+        QScrollBar::handle:vertical:pressed {
+            background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #005a9e, stop:1 #0078d7);
         }
         QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
             height: 0px;
+            background: transparent;
+        }
+        QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+            background: transparent;
+        }
+        QScrollBar:horizontal {
+            border: none;
+            background: #f0f0f0;
+            height: 12px;
+            margin: 2px 3px 2px 3px;
+            border-radius: 6px;
+        }
+        QScrollBar::handle:horizontal {
+            background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #b8b8b8, stop:1 #c8c8c8);
+            min-width: 30px;
+            border-radius: 5px;
+            margin: 1px;
+        }
+        QScrollBar::handle:horizontal:hover {
+            background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #0078d7, stop:1 #1e90ff);
+        }
+        QScrollBar::handle:horizontal:pressed {
+            background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #005a9e, stop:1 #0078d7);
+        }
+        QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+            width: 0px;
+            background: transparent;
+        }
+        QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+            background: transparent;
         }
 
         /* Window Controls - Light Theme */
@@ -767,20 +818,55 @@ void MainWindow::applyDarkTheme() {
         }
         QScrollBar:vertical {
             border: none;
-            background: #2b2b2b;
-            width: 14px;
-            margin: 0px;
+            background: #1e1e1e;
+            width: 12px;
+            margin: 3px 2px 3px 2px;
+            border-radius: 6px;
         }
         QScrollBar::handle:vertical {
-            background: #505050;
-            min-height: 20px;
-            border-radius: 7px;
+            background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #555555, stop:1 #666666);
+            min-height: 30px;
+            border-radius: 5px;
+            margin: 1px;
+        }
+        QScrollBar::handle:vertical:hover {
+            background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #4da6ff, stop:1 #6bb8ff);
+        }
+        QScrollBar::handle:vertical:pressed {
+            background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #3a8fdb, stop:1 #4da6ff);
         }
         QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
             height: 0px;
+            background: transparent;
         }
-        QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
-            height: 0px;
+        QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+            background: transparent;
+        }
+        QScrollBar:horizontal {
+            border: none;
+            background: #1e1e1e;
+            height: 12px;
+            margin: 2px 3px 2px 3px;
+            border-radius: 6px;
+        }
+        QScrollBar::handle:horizontal {
+            background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #555555, stop:1 #666666);
+            min-width: 30px;
+            border-radius: 5px;
+            margin: 1px;
+        }
+        QScrollBar::handle:horizontal:hover {
+            background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #4da6ff, stop:1 #6bb8ff);
+        }
+        QScrollBar::handle:horizontal:pressed {
+            background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #3a8fdb, stop:1 #4da6ff);
+        }
+        QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+            width: 0px;
+            background: transparent;
+        }
+        QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+            background: transparent;
         }
 
         /* Window Controls - Dark Theme */

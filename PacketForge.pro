@@ -60,7 +60,8 @@ INCLUDEPATH += $$PWD/src/ui \
                $$PWD/src/modules/modbus \
                $$PWD/src/modules/traffic \
                $$PWD/src/modules/oscilloscope \
-               $$PWD/src/modules/visualizer
+               $$PWD/src/modules/visualizer \
+               $$PWD/src/modules/checksum
 
 DEPENDPATH += $$PWD/src/ui \
               $$PWD/src/network \
@@ -82,7 +83,8 @@ SOURCES += \
     src/modules/modbus/ModbusClientWidget.cpp \
     src/modules/traffic/TrafficMonitorWidget.cpp \
     src/modules/oscilloscope/OscilloscopeWidget.cpp \
-    src/modules/visualizer/ByteVisualizerWidget.cpp
+    src/modules/visualizer/ByteVisualizerWidget.cpp \
+    src/modules/checksum/ChecksumWidget.cpp
 
 # --- Header Files ---
 HEADERS += \
@@ -101,7 +103,8 @@ HEADERS += \
     src/modules/modbus/ModbusClientWidget.h \
     src/modules/traffic/TrafficMonitorWidget.h \
     src/modules/oscilloscope/OscilloscopeWidget.h \
-    src/modules/visualizer/ByteVisualizerWidget.h
+    src/modules/visualizer/ByteVisualizerWidget.h \
+    src/modules/checksum/ChecksumWidget.h
 
 # --- Forms & Resources ---
 FORMS += \
@@ -111,7 +114,8 @@ FORMS += \
     src/modules/modbus/ModbusClientWidget.ui \
     src/modules/traffic/TrafficMonitorWidget.ui \
     src/modules/oscilloscope/OscilloscopeWidget.ui \
-    src/modules/visualizer/ByteVisualizerWidget.ui
+    src/modules/visualizer/ByteVisualizerWidget.ui \
+    src/modules/checksum/ChecksumWidget.ui
 RESOURCES += Files/Resources.qrc
 
 # --- Deployment ---
